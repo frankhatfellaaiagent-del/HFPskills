@@ -1,0 +1,6 @@
+{
+  "name": "hatfella-admin",
+  "description": "Hat Fella admin & finance workflows: bi-monthly photographer payroll in Aryeo and Top Hat Club Stripe-to-Aryeo pricing sync (on-demand and end-of-day).",
+  "version": "1.0.0",
+  "author": { "name": "Hat Fella Productions" }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "hatfella-skills",
+  "owner": { "name": "Hat Fella Productions" },
+  "metadata": {
+    "description": "Hat Fella Productions team skills: production, media editing, front office, and admin workflows for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "hatfella-production",
+      "source": "./plugins/hatfella-production",
+      "description": "Shoot upload, EOD upload check & run, missing-items alert, delivery run, delivery QC, CubiCasa floor-plan sync"
+    },
+    {
+      "name": "hatfella-media-editing",
+      "source": "./plugins/hatfella-media-editing",
+      "description": "Virtual staging and AutoHDR declutter/edit workflows"
+    },
+    {
+      "name": "hatfella-front-office",
+      "source": "./plugins/hatfella-front-office",
+      "description": "Aryeo booking, Quo inbox triage, Quo missing-report to Denny"
+    },
+    {
+      "name": "hatfella-admin",
+      "source": "./plugins/hatfella-admin",
+      "description": "Photographer payroll and Top Hat Club Stripe-to-Aryeo pricing sync"
+    }
+  ]
+}

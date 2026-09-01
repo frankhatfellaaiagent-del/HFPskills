@@ -1,0 +1,6 @@
+{
+  "name": "hatfella-front-office",
+  "description": "Hat Fella front-office workflows: booking shoots in Aryeo, Quo inbox triage, and the Quo missing-report to Denny.",
+  "version": "1.0.0",
+  "author": { "name": "Hat Fella Productions" }
+}

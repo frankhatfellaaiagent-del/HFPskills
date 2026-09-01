@@ -1,0 +1,6 @@
+{
+  "name": "hatfella-production",
+  "description": "Hat Fella production & delivery workflows: SD-card shoot upload, end-of-night upload check/run, missing-items alert, daily delivery run, delivery QC, and CubiCasa floor-plan sync.",
+  "version": "1.0.0",
+  "author": { "name": "Hat Fella Productions" }
+}
