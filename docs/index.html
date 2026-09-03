@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Install Hat Fella AI Skills</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A9%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="logo" id="logo">🎩</div>
+  <h1 id="site-title">Install Hat Fella AI Skills</h1>
+  <p class="tagline" id="tagline">Install Hat Fella’s approved workflows inside Claude Code or Codex.</p>
+  <p class="sub" id="description"></p>
+</header>
+
+<main>
+
+  <section id="install">
+    <h2>Choose how to install</h2>
+    <p class="section-note">Pick whichever feels easiest — they all end in the same place. Installing takes about two minutes.</p>
+
+    <div class="card">
+      <p class="who">Option 1 · Codex on Mac</p>
+      <h3>Copy one command into Terminal</h3>
+      <ol class="steps">
+        <li>Open <strong>Terminal</strong> (press <kbd>⌘</kbd>+<kbd>Space</kbd>, type “Terminal”, press Enter).</li>
+        <li>Click the button below, paste into Terminal, and press Enter.</li>
+        <li>When it says “Done”, <strong>restart Codex</strong>.</li>
+      </ol>
+      <code class="cmd" id="install-cmd"></code>
+      <div class="copy-row">
+        <button class="copy" data-copy-target="install-cmd" data-label="Copy Installer">Copy Installer</button>
+        <span class="copy-note">Copied ✓ — now paste it into Terminal</span>
+      </div>
+      <p class="muted">Updates later: run the exact same command again — it refreshes everything.
+        Technical? <a id="installer-link" href="#" rel="noopener">Read the installer on GitHub</a> before running it.</p>
+    </div>
+
+    <div class="card">
+      <p class="who">Option 2 · Let the AI install it</p>
+      <h3>Paste a prompt into Claude or Codex</h3>
+      <ol class="steps">
+        <li>Click the button below to copy the setup prompt.</li>
+        <li>Open Claude Code or Codex and paste it as a message.</li>
+        <li>The AI checks the installer, runs it, and tells you when to restart.</li>
+      </ol>
+      <div class="copy-row">
+        <button class="copy" id="copy-prompt" data-label="Copy Setup Prompt">Copy Setup Prompt</button>
+        <span class="copy-note">Copied ✓ — paste it into Claude or Codex</span>
+      </div>
+      <p class="muted">The prompt tells the AI to inspect the installer first, never use sudo, and never touch unrelated files.</p>
+    </div>
+
+    <div class="card">
+      <p class="who">Option 3 · Claude Code</p>
+      <h3>Install as a plugin marketplace</h3>
+      <ol class="steps">
+        <li>In Claude Code, type <code>/plugin</code> and press Enter.</li>
+        <li>Go to <strong>Marketplaces → Add marketplace</strong> and enter: <code id="marketplace-ref"></code></li>
+        <li>Back in the plugin menu, install the plugin(s) for your role (or all four).</li>
+        <li><strong>Enable auto-update</strong> so skill improvements reach you automatically.</li>
+      </ol>
+      <p class="muted">On Claude Team or Enterprise plans, an administrator may be able to distribute these plugins to everyone at the organization level — then this step disappears entirely.</p>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>What gets installed</h2>
+    <p class="section-note">Every skill is a written playbook for one Hat Fella workflow. The list below comes straight from the team repository.</p>
+    <div id="catalog"><p class="muted">Loading the skill list…</p></div>
+  </section>
+
+  <section id="updates">
+    <h2>How updates work</h2>
+    <div class="card">
+      <p>All skills live in one company GitHub repository — the single source of truth. When a skill is improved there:</p>
+      <ol class="steps">
+        <li><strong>Claude Code</strong> users with auto-update on get it automatically.</li>
+        <li><strong>Codex</strong> users run the installer command again (Option 1) — that’s the whole update.</li>
+      </ol>
+      <p class="muted">If an update ever breaks a skill, the company can roll back to any earlier version — every change is kept in history.</p>
+    </div>
+  </section>
+
+  <section id="security">
+    <h2>Security &amp; privacy</h2>
+    <div class="card">
+      <ul>
+        <li>The skills repository is currently <strong>public</strong> — no GitHub account or login is needed to install.</li>
+        <li>The installer will <strong>never ask for a password</strong>. If anything asks for your GitHub password during setup, stop and contact support.</li>
+        <li>The installer only manages the Hat Fella skill links it created itself (it keeps a manifest). Your personal skills and files are never touched.</li>
+        <li>No sudo, no admin rights, nothing installed system-wide.</li>
+        <li>Anyone can <a id="installer-link-2" href="#" rel="noopener">inspect the installer on GitHub</a> before running it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <details>
+      <summary>“git is not installed” or a popup about developer tools appears</summary>
+      <p>Your Mac needs Apple’s free command-line tools first. Click <strong>Install</strong> on the popup (or run <code>xcode-select --install</code> in Terminal), wait for it to finish, then run the install command again.</p>
+    </details>
+    <details>
+      <summary>I pasted the command but got an error</summary>
+      <p>Make sure you copied the <em>whole</em> command with the Copy button — it must start with <code>curl</code> and end with <code>| bash</code>. Copy it again and paste as one line.</p>
+    </details>
+    <details>
+      <summary>Codex doesn’t show the new skills</summary>
+      <p>Fully quit Codex and open it again — skills load at startup. If they still don’t appear, run the install command again and read its final message.</p>
+    </details>
+    <details>
+      <summary>The installer says my copy has “local changes”</summary>
+      <p>Someone edited skill files directly on your computer, so the installer stopped rather than overwrite them. Ask whoever manages the skills to look at the <code>~/HFPskills</code> folder — nothing was deleted.</p>
+    </details>
+    <details>
+      <summary>The installer says a skill was “skipped”</summary>
+      <p>You already have a personal skill with the same name. The installer never overwrites your own skills — rename your personal one if you want the Hat Fella version.</p>
+    </details>
+    <details>
+      <summary>How do I update?</summary>
+      <p>Run the same install command again (Option 1). It pulls the latest skills and refreshes everything. Claude Code users with auto-update on don’t need to do anything.</p>
+    </details>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ</h2>
+    <details>
+      <summary>What is a “skill”?</summary>
+      <p>A written standard-operating-procedure the AI reads before doing a task — how we book a shoot, deliver a listing, run payroll. It makes the AI do the task the Hat Fella way, every time.</p>
+    </details>
+    <details>
+      <summary>Do I need a GitHub account?</summary>
+      <p>No. The repository is public, so installing and updating needs no login at all.</p>
+    </details>
+    <details>
+      <summary>Does this cost anything or send my data anywhere?</summary>
+      <p>No. It downloads text files to your computer and links them where Codex or Claude can read them. Nothing is uploaded.</p>
+    </details>
+    <details>
+      <summary>Can I uninstall?</summary>
+      <p>Yes — delete the <code>~/HFPskills</code> folder and the Hat Fella links in your skills folder (they’re listed in the installer’s manifest file). Your own skills stay.</p>
+    </details>
+    <details>
+      <summary>Who do I ask for help?</summary>
+      <p>Email <a id="support-link" href="#"></a> and describe what you saw — a screenshot of the Terminal helps.</p>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <p><span id="footer-company"></span> · <a id="footer-repo" href="#" rel="noopener">Skill repository on GitHub</a></p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

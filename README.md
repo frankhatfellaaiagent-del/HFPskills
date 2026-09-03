@@ -2,6 +2,23 @@
 
 This repo is the **single source of truth** for Hat Fella Productions' AI skills (SOPs for Claude). Every workflow the team runs through Claude lives here, packaged as installable plugins. The company owns the skills, git history gives rollback, and one edit here reaches everyone with auto-update enabled.
 
+**Setup website** (send this to new teammates): once GitHub Pages is enabled, the guided install page lives at
+https://frankhatfellaaiagent-del.github.io/HFPskills/
+
+## Easy install (Codex)
+
+One command in Terminal — it installs everything, and running it again later is the update:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/frankhatfellaaiagent-del/HFPskills/main/install.sh | bash
+```
+
+Then restart Codex. The installer is safe to re-run any time: it never uses sudo, never asks for a password, never overwrites personal skills, and only manages the links it created (tracked in a manifest). Read [`install.sh`](install.sh) to see exactly what it does.
+
+## Or let the AI install it
+
+Copy the prompt in [`docs/install-prompt.txt`](docs/install-prompt.txt) and paste it into Claude Code or Codex — the AI inspects the installer, runs it, and reports the installed skills.
+
 ## Install (Claude Code)
 
 1. Open Claude Code and run `/plugin`
@@ -61,4 +78,24 @@ Every skill ends with a **Self-improvement** section: after each run, Claude rev
 
 ## Adding a new skill
 
-Create `plugins/<plugin>/skills/<new-skill-name>/SKILL.md` with YAML frontmatter (`name`, `description`) followed by the step-by-step SOP. Skills inside a plugin's `skills/` folder are auto-discovered — no registration needed. Add a row to the table above, commit, push.
+Create `plugins/<plugin>/skills/<new-skill-name>/SKILL.md` with YAML frontmatter (`name`, `description`) followed by the step-by-step SOP. Skills inside a plugin's `skills/` folder are auto-discovered — no registration needed. Add a row to the table above, run `scripts/generate-catalog.sh` (updates the website's skill list), commit, push.
+
+## Troubleshooting installs
+
+- **"git is not installed" / Apple developer-tools popup** — click Install (or run `xcode-select --install`), wait, re-run the install command.
+- **Error after pasting the command** — copy the whole line again with the Copy button; it must start with `curl` and end with `| bash`.
+- **Codex doesn't show the skills** — fully quit and reopen Codex; skills load at startup.
+- **"local changes" message** — someone edited `~/HFPskills` directly; the installer stops instead of overwriting. Nothing was deleted.
+- **A skill was "skipped"** — a personal skill with the same name exists; the installer never overwrites it.
+- **Updating** — run the same install command again (Codex). Claude Code with auto-update needs nothing.
+
+## If this repo goes private
+
+The public `curl … | bash` one-liner stops working the moment the repo is private (raw.githubusercontent.com will return 404). Teammates then need proper GitHub access: a collaborator invite plus normal git authentication (`gh auth login` or a git credential helper). **Never** put tokens in URLs, in the website's JavaScript, or in the installer — use official GitHub authentication or a company-controlled protected download instead.
+
+## Development
+
+- `bash tests/test-install.sh` — installer test suite (runs in temp dirs only).
+- `scripts/generate-catalog.sh` — regenerates `docs/catalog.json` for the website from the plugin/skill metadata.
+- `claude plugin validate .` — validates the marketplace and plugin manifests.
+- The setup website is static (`docs/` — plain HTML/CSS/JS, GitHub Pages-ready); company-specific values live in `docs/config.js`, white-label notes in `docs/WHITE_LABEL_NOTES.md`.

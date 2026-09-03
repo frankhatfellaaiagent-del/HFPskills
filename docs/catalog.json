@@ -1,0 +1,88 @@
+{
+  "plugins": [
+    {
+      "name": "hatfella-admin",
+      "description": "Hat Fella admin & finance workflows: bi-monthly photographer payroll in Aryeo and Top Hat Club Stripe-to-Aryeo pricing sync (on-demand and end-of-day).",
+      "skills": [
+        {
+          "name": "aryeo-payroll-run",
+          "summary": "Run bi-monthly photographer payroll in Aryeo for Hat Fella Productions."
+        },
+        {
+          "name": "top-hat-club-eod-sync",
+          "summary": "End-of-day Top Hat Club sync \u2014 pull every active club subscriber from Stripe, make sure each has \\\"The Top Hat Club\\\" pricing plan (10% discount) on their Aryeo profile, apply where missing, verify, and report."
+        },
+        {
+          "name": "top-hat-club-sync",
+          "summary": "Sync new Top Hat Club members from Stripe into Aryeo by applying \"The Top Hat Club\" pricing plan override to their Aryeo customer profile."
+        }
+      ]
+    },
+    {
+      "name": "hatfella-front-office",
+      "description": "Hat Fella front-office workflows: booking shoots in Aryeo, Quo inbox triage, and the Quo missing-report to Denny.",
+      "skills": [
+        {
+          "name": "aryeo-book-appointment",
+          "summary": ">-"
+        },
+        {
+          "name": "quo-inbox-triage",
+          "summary": ">"
+        },
+        {
+          "name": "quo-missing-to-denny",
+          "summary": "Run the Quo (my.quo.com) inbox triage for Hat Fella \u2014 sweep every inbox under Open and Done plus Calls, find everything unanswered or unhandled, then WhatsApp Denny what's missing."
+        }
+      ]
+    },
+    {
+      "name": "hatfella-media-editing",
+      "description": "Hat Fella media editing workflows: AI virtual staging in Aryeo and AutoHDR declutter / object-removal edits.",
+      "skills": [
+        {
+          "name": "aryeo-virtual-staging",
+          "summary": ">-"
+        },
+        {
+          "name": "autohdr-declutter",
+          "summary": ">-"
+        }
+      ]
+    },
+    {
+      "name": "hatfella-production",
+      "description": "Hat Fella production & delivery workflows: SD-card shoot upload, end-of-night upload check/run, missing-items alert, daily delivery run, delivery QC, and CubiCasa floor-plan sync.",
+      "skills": [
+        {
+          "name": "aryeo-cubicasa-floorplan-sync",
+          "summary": ">-"
+        },
+        {
+          "name": "hatfella-delivery-qc",
+          "summary": ">-"
+        },
+        {
+          "name": "hatfella-delivery-run",
+          "summary": ">-"
+        },
+        {
+          "name": "hatfella-eod-upload-check",
+          "summary": ">-"
+        },
+        {
+          "name": "hatfella-eod-upload-run",
+          "summary": "End-of-night run of the Hat Fella upload check \u2014 walk every shoot on today's Patrn list, verify photographer media came in (Dropbox MLS/drone, CubiCasa floor plan, Zillow 3D), tick verified deliverables on Patrn, and Wha"
+        },
+        {
+          "name": "hatfella-missing-items-alert",
+          "summary": "Audit Hat Fella shoots from the past 72 hours for missing/undelivered media, cross-check every shoot's stage on the Hat Rack production board against Aryeo, then send Fabian the findings by email (Outlook) and WhatsApp."
+        },
+        {
+          "name": "hatfella-shoot-upload",
+          "summary": ">-"
+        }
+      ]
+    }
+  ]
+}
