@@ -13,7 +13,15 @@ One command in Terminal — it installs everything, and running it again later i
 curl -fsSL https://raw.githubusercontent.com/frankhatfellaaiagent-del/HFPskills/main/install.sh | bash
 ```
 
-Then restart Codex. The installer is safe to re-run any time: it never uses sudo, never asks for a password, never overwrites personal skills, and only manages the links it created (tracked in a manifest). Read [`install.sh`](install.sh) to see exactly what it does.
+Then restart Codex. The installer is safe to re-run any time: it never uses sudo, never asks for a password, never overwrites personal skills, and only manages the links it created (tracked in a manifest that records the repo, branch, installed commit, date, and every link). It works with the stock Mac bash and is fully non-interactive. Read [`install.sh`](install.sh) to see exactly what it does.
+
+**Uninstall** (removes only the links the installer created; keeps everything else):
+
+```bash
+~/HFPskills/install.sh --uninstall
+```
+
+**Rollback** after a bad update: `git revert <bad-commit> && git push` on `main` — everyone picks it up on their next update. Each machine's manifest records the exact installed commit, and the installer prints the short version on every run, so support can always tell what someone is on. See [SECURITY.md](SECURITY.md) for the full procedure and recommended branch protections.
 
 ## Or let the AI install it
 
@@ -95,7 +103,9 @@ The public `curl … | bash` one-liner stops working the moment the repo is priv
 
 ## Development
 
-- `bash tests/test-install.sh` — installer test suite (runs in temp dirs only).
-- `scripts/generate-catalog.sh` — regenerates `docs/catalog.json` for the website from the plugin/skill metadata.
-- `claude plugin validate .` — validates the marketplace and plugin manifests.
+- `bash tests/test-install.sh` — installer test suite. Runs entirely under a temp `HFP_TARGET_HOME` (never touches the real home directory, and asserts it), cleaned up with a trap.
+- `bash scripts/validate-skills.sh` — full validation: SKILL.md presence, name/description frontmatter, duplicate names (frontmatter and folder), broken symlinks, website-catalog freshness, and `claude plugin validate` on the marketplace and each plugin individually.
+- `scripts/generate-catalog.sh` — regenerates `docs/catalog.json` for the website from SKILL.md frontmatter; `--check` fails if it's outdated (run by validate-skills).
+- Before shipping changes: run a secret scan and review [SECURITY.md](SECURITY.md)'s never-commit checklist — this repo is public.
+- Onboarding is only considered validated once a real teammate completes [TEAM_TEST_CHECKLIST.md](TEAM_TEST_CHECKLIST.md).
 - The setup website is static (`docs/` — plain HTML/CSS/JS, GitHub Pages-ready); company-specific values live in `docs/config.js`, white-label notes in `docs/WHITE_LABEL_NOTES.md`.

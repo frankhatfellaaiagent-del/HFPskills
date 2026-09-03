@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
-# Regenerates docs/catalog.json from the repository's plugin and skill
-# metadata. Run this after adding or renaming skills, then commit the result.
+# Generates docs/catalog.json from the repository's plugin and skill
+# metadata (SKILL.md frontmatter: name + description). Run after adding or
+# editing skills, then commit the result.
+#
+#   scripts/generate-catalog.sh          # (re)write docs/catalog.json
+#   scripts/generate-catalog.sh --check  # fail if docs/catalog.json is outdated
 set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 
-python3 - <<'PY'
+MODE="write"
+if [ "${1:-}" = "--check" ]; then MODE="check"; fi
+
+OUT="docs/catalog.json"
+if [ "$MODE" = "check" ]; then
+  OUT="$(mktemp)"
+  trap 'rm -f "$OUT"' EXIT
+fi
+
+OUT="$OUT" python3 - <<'PY'
 import json, os, re, glob
 
 catalog = {"plugins": []}
@@ -33,9 +46,17 @@ for pj_path in sorted(glob.glob("plugins/*/.claude-plugin/plugin.json")):
         "skills": skills,
     })
 
-os.makedirs("docs", exist_ok=True)
-with open("docs/catalog.json", "w") as f:
+out = os.environ["OUT"]
+with open(out, "w") as f:
     json.dump(catalog, f, indent=2)
 total = sum(len(p["skills"]) for p in catalog["plugins"])
-print(f"docs/catalog.json written: {len(catalog['plugins'])} plugins, {total} skills")
+print(f"{out}: {len(catalog['plugins'])} plugins, {total} skills")
 PY
+
+if [ "$MODE" = "check" ]; then
+  if ! diff -q "$OUT" docs/catalog.json >/dev/null 2>&1; then
+    echo "ERROR: docs/catalog.json is outdated. Run scripts/generate-catalog.sh and commit the result." >&2
+    exit 1
+  fi
+  echo "docs/catalog.json is up to date."
+fi
