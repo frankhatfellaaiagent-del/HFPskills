@@ -21,14 +21,16 @@ snap_real() {
 }
 REAL_BEFORE="$(snap_real)"
 
-# A bare clone acts as the "remote" so pulls/clones work offline.
-git clone --quiet --bare "$REPO_ROOT" "$WORK/origin.git"
+# A bare repo acts as the "remote" so pulls/clones work offline. HEAD is
+# pushed into a named branch so this works even from a detached-HEAD
+# checkout (as on CI runners).
+git init --quiet --bare "$WORK/origin.git"
+git -C "$REPO_ROOT" push --quiet "$WORK/origin.git" HEAD:refs/heads/testmain
 
 export HFP_TARGET_HOME="$WORK/home"
 mkdir -p "$HFP_TARGET_HOME"
 export HFP_REPO_URL="$WORK/origin.git"
-HFP_REPO_BRANCH="$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)"
-export HFP_REPO_BRANCH
+export HFP_REPO_BRANCH=testmain
 REPO_DIR="$HFP_TARGET_HOME/HFPskills"
 SKILLS_DIR="$HFP_TARGET_HOME/.agents/skills"
 
