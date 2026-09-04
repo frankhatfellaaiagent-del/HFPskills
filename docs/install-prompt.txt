@@ -1,0 +1,19 @@
+Please install (or update) the Hat Fella Productions team skills on this computer. Follow these steps exactly:
+
+1. Download and READ the installer first so you know what it does before running it:
+   https://raw.githubusercontent.com/frankhatfellaaiagent-del/HFPskills/main/install.sh
+   It should only: check for git, clone or fast-forward-update the public repository https://github.com/frankhatfellaaiagent-del/HFPskills into ~/HFPskills, and create symlinks for each skill into the Codex skills folder, tracked in a manifest file. If it appears to do anything else, stop and tell me.
+
+2. Rules while installing:
+   - Never use sudo.
+   - Never delete, move, or overwrite any file that is not a symlink created by this installer (the manifest file lists them).
+   - Never enter or ask me for a GitHub password or token — the repository is public.
+
+3. Run the installer:
+   curl -fsSL https://raw.githubusercontent.com/frankhatfellaaiagent-del/HFPskills/main/install.sh | bash
+
+4. Verify: list the contents of the skills folder the installer reported and confirm each Hat Fella skill is a symlink that resolves to a SKILL.md inside ~/HFPskills.
+
+5. Tell me the full list of installed skills, mention anything that was skipped and why, and remind me to restart the app (Codex or Claude) so the skills load.
+
+To update the skills later, run the same installer again — that is the update mechanism.

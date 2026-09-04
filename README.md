@@ -2,6 +2,31 @@
 
 This repo is the **single source of truth** for Hat Fella Productions' AI skills (SOPs for Claude). Every workflow the team runs through Claude lives here, packaged as installable plugins. The company owns the skills, git history gives rollback, and one edit here reaches everyone with auto-update enabled.
 
+**Setup website** (send this to new teammates): once GitHub Pages is enabled, the guided install page lives at
+https://frankhatfellaaiagent-del.github.io/HFPskills/
+
+## Easy install (Codex)
+
+One command in Terminal — it installs everything, and running it again later is the update:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/frankhatfellaaiagent-del/HFPskills/main/install.sh | bash
+```
+
+Then restart Codex. The installer is safe to re-run any time: it never uses sudo, never asks for a password, never overwrites personal skills, and only manages the links it created (tracked in a manifest that records the repo, branch, installed commit, date, and every link). It works with the stock Mac bash and is fully non-interactive. Read [`install.sh`](install.sh) to see exactly what it does.
+
+**Uninstall** (removes only the links the installer created; keeps everything else):
+
+```bash
+~/HFPskills/install.sh --uninstall
+```
+
+**Rollback** after a bad update: `git revert <bad-commit> && git push` on `main` — everyone picks it up on their next update. Each machine's manifest records the exact installed commit, and the installer prints the short version on every run, so support can always tell what someone is on. See [SECURITY.md](SECURITY.md) for the full procedure and recommended branch protections.
+
+## Or let the AI install it
+
+Copy the prompt in [`docs/install-prompt.txt`](docs/install-prompt.txt) and paste it into Claude Code or Codex — the AI inspects the installer, runs it, and reports the installed skills.
+
 ## Install (Claude Code)
 
 1. Open Claude Code and run `/plugin`
@@ -61,4 +86,26 @@ Every skill ends with a **Self-improvement** section: after each run, Claude rev
 
 ## Adding a new skill
 
-Create `plugins/<plugin>/skills/<new-skill-name>/SKILL.md` with YAML frontmatter (`name`, `description`) followed by the step-by-step SOP. Skills inside a plugin's `skills/` folder are auto-discovered — no registration needed. Add a row to the table above, commit, push.
+Create `plugins/<plugin>/skills/<new-skill-name>/SKILL.md` with YAML frontmatter (`name`, `description`) followed by the step-by-step SOP. Skills inside a plugin's `skills/` folder are auto-discovered — no registration needed. Add a row to the table above, run `scripts/generate-catalog.sh` (updates the website's skill list), commit, push.
+
+## Troubleshooting installs
+
+- **"git is not installed" / Apple developer-tools popup** — click Install (or run `xcode-select --install`), wait, re-run the install command.
+- **Error after pasting the command** — copy the whole line again with the Copy button; it must start with `curl` and end with `| bash`.
+- **Codex doesn't show the skills** — fully quit and reopen Codex; skills load at startup.
+- **"local changes" message** — someone edited `~/HFPskills` directly; the installer stops instead of overwriting. Nothing was deleted.
+- **A skill was "skipped"** — a personal skill with the same name exists; the installer never overwrites it.
+- **Updating** — run the same install command again (Codex). Claude Code with auto-update needs nothing.
+
+## If this repo goes private
+
+The public `curl … | bash` one-liner stops working the moment the repo is private (raw.githubusercontent.com will return 404). Teammates then need proper GitHub access: a collaborator invite plus normal git authentication (`gh auth login` or a git credential helper). **Never** put tokens in URLs, in the website's JavaScript, or in the installer — use official GitHub authentication or a company-controlled protected download instead.
+
+## Development
+
+- `bash tests/test-install.sh` — installer test suite. Runs entirely under a temp `HFP_TARGET_HOME` (never touches the real home directory, and asserts it), cleaned up with a trap.
+- `bash scripts/validate-skills.sh` — full validation: SKILL.md presence, name/description frontmatter, duplicate names (frontmatter and folder), broken symlinks, website-catalog freshness, and `claude plugin validate` on the marketplace and each plugin individually.
+- `scripts/generate-catalog.sh` — regenerates `docs/catalog.json` for the website from SKILL.md frontmatter; `--check` fails if it's outdated (run by validate-skills).
+- Before shipping changes: run a secret scan and review [SECURITY.md](SECURITY.md)'s never-commit checklist — this repo is public.
+- Onboarding is only considered validated once a real teammate completes [TEAM_TEST_CHECKLIST.md](TEAM_TEST_CHECKLIST.md).
+- The setup website is static (`docs/` — plain HTML/CSS/JS, GitHub Pages-ready); company-specific values live in `docs/config.js`, white-label notes in `docs/WHITE_LABEL_NOTES.md`.
