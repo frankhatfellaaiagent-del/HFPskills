@@ -49,6 +49,7 @@ check "manifest records source and dest paths" grep -qE "^skill	[^	]+	$REPO_DIR/
 short="$(git -C "$REPO_DIR" rev-parse --short HEAD)"
 check "final report shows short sha" grep -q "version $short" "$WORK/run1.log"
 first_link="$(find "$SKILLS_DIR" -maxdepth 1 -type l | head -1)"
+# shellcheck disable=SC2016  # $1 is expanded by the inner bash, not this shell
 check "links are absolute" bash -c 'case "$(readlink "$1")" in /*) exit 0;; *) exit 1;; esac' _ "$first_link"
 check "links resolve to a SKILL.md" [ -f "$first_link/SKILL.md" ]
 
@@ -65,6 +66,7 @@ check "second run linked $((expected-1)) (one collision) (got $linked2)" [ "$lin
 check "collision dir untouched (still a real dir)" [ -d "$SKILLS_DIR/$first_name" -a ! -L "$SKILLS_DIR/$first_name" ]
 check "collision reported" grep -q "skipped: $first_name" "$WORK/run2.log"
 check "personal skill untouched" [ -f "$SKILLS_DIR/my-personal-skill/SKILL.md" ]
+# shellcheck disable=SC2016  # $1 is expanded by the inner bash, not this shell
 check "no nested/duplicate links" bash -c '[ -z "$(find "$1" -mindepth 2 -maxdepth 2 -type l)" ]' _ "$SKILLS_DIR"
 
 echo "== run 3: dirty repo refused =="

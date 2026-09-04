@@ -64,7 +64,6 @@ uninstall_from() {
   manifest="$root/$MANIFEST_NAME"
   [ -f "$manifest" ] || return 0
   say "Uninstalling Hat Fella skills from $root ..."
-  removed=0
   manifest_names "$manifest" | while IFS= read -r name; do
     [ -n "$name" ] || continue
     link="$root/$name"

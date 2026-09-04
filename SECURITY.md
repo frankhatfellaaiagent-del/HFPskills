@@ -36,9 +36,17 @@ Set in GitHub → Settings → Branches → Add branch ruleset for `main`:
 - [ ] Restrict branch deletion
 - [ ] Require two-factor authentication for every account with write access
       (GitHub → account Settings → Password and authentication)
-- [ ] Tag a known-good version before every major update
-      (`git tag -a vX.Y.Z -m "..." && git push origin vX.Y.Z`) so there is
-      always a tested commit to roll back to
+- [ ] Tag a known-good version before every major update so there is always
+      a tested commit to roll back to. **Tag `main` after the change merges**
+      — never a feature-branch commit, because a squash merge creates a new
+      commit on `main` and the feature-branch commit is not the production
+      code. Exact UI steps:
+      1. Merge the PR into `main`.
+      2. Repo → **Releases** (right sidebar) → **Draft a new release**.
+      3. Click **Choose a tag**, type the new tag (e.g. `v1.0.0`), select
+         **Create new tag on publish**, and set **Target: main**.
+      4. Title it (e.g. "v1.0.0 — installer + setup site"), click
+         **Publish release**. The tag now points at the merged `main` commit.
 
 ## Rollback
 

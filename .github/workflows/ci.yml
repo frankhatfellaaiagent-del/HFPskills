@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bash syntax
+        run: |
+          bash -n install.sh
+          bash -n scripts/generate-catalog.sh
+          bash -n scripts/validate-skills.sh
+          bash -n tests/test-install.sh
+
+      - name: ShellCheck
+        run: shellcheck install.sh scripts/generate-catalog.sh scripts/validate-skills.sh tests/test-install.sh
+
+      - name: Installer test suite
+        run: |
+          git config --global user.email ci@example.invalid
+          git config --global user.name CI
+          bash tests/test-install.sh
+
+      - name: Skill validation (SKILL.md, duplicate names, broken links, catalog freshness)
+        run: bash scripts/validate-skills.sh
+        # Note: the claude CLI is not available on GitHub runners, so
+        # validate-skills.sh skips `claude plugin validate` here; that check
+        # is run locally before pushing (documented in the PR).
+
+      - name: Website smoke test
+        run: |
+          python3 -m http.server 8899 --directory docs >/dev/null 2>&1 &
+          sleep 2
+          for p in index.html styles.css app.js config.js catalog.json install-prompt.txt; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8899/$p")
+            if [ "$code" != "200" ]; then echo "FAIL: $p returned $code"; exit 1; fi
+            echo "ok: $p"
+          done
+          # config.js defines everything the page needs
+          node -e '
+            global.window = {};
+            require("./docs/config.js");
+            const c = window.HFP_CONFIG;
+            const need = ["companyName","siteTitle","repoUrl","installerUrl","installCommand","claudeMarketplace","supportContact"];
+            for (const k of need) if (!c[k]) { console.error("config.js missing " + k); process.exit(1); }
+            if (!c.installCommand.includes("install.sh")) { console.error("installCommand looks wrong"); process.exit(1); }
+            console.log("ok: config.js");
+          '
+          # catalog matches the repository (counts line up with the tree)
+          python3 - <<'PY'
+          import json, glob, sys
+          cat = json.load(open("docs/catalog.json"))
+          total = sum(len(p["skills"]) for p in cat["plugins"])
+          skills = len(glob.glob("plugins/*/skills/*/SKILL.md"))
+          plugins = len(glob.glob("plugins/*/.claude-plugin/plugin.json"))
+          if len(cat["plugins"]) != plugins or total != skills:
+              sys.exit(f"catalog mismatch: {len(cat['plugins'])}/{plugins} plugins, {total}/{skills} skills")
+          print(f"ok: catalog.json ({plugins} plugins, {skills} skills)")
+          PY
+          # the page wires up its copy buttons and required elements
+          grep -q 'data-copy-target="install-cmd"' docs/index.html
+          grep -q 'id="copy-prompt"' docs/index.html
+          grep -q 'id="catalog"' docs/index.html
+          grep -q 'id="install-cmd"' docs/index.html
+          echo "ok: index.html elements"
