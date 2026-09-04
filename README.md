@@ -2,8 +2,9 @@
 
 This repo is the **single source of truth** for Hat Fella Productions' AI skills (SOPs for Claude). Every workflow the team runs through Claude lives here, packaged as installable plugins. The company owns the skills, git history gives rollback, and one edit here reaches everyone with auto-update enabled.
 
-**Setup website** (send this to new teammates): once GitHub Pages is enabled, the guided install page lives at
+**Setup website** (send this to new teammates): the guided install page lives at
 https://frankhatfellaaiagent-del.github.io/HFPskills/
+(published automatically from `docs/` by the "Deploy website" workflow on every push to `main`)
 
 ## Easy install (Codex)
 
